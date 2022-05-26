@@ -19,7 +19,37 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = s.Write(AlphaProtocol.PrepareText([]byte("Hello darkness my old friend...")))
+	_, err = s.Write(AlphaProtocol.PrepareSetTime(time.Now()))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = s.Write(AlphaProtocol.DeinitSequence())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = s.Write(AlphaProtocol.InitSequence())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = s.Write(AlphaProtocol.PrepareSetDate(time.Now()))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = s.Write(AlphaProtocol.DeinitSequence())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = s.Write(AlphaProtocol.InitSequence())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = s.Write(AlphaProtocol.PrepareStaticText(AlphaProtocol.PrepareDateTime(), AlphaProtocol.COLOR_COLOR_MIX))
 	if err != nil {
 		log.Fatal(err)
 	}
