@@ -6,11 +6,11 @@ import (
 
 type DateFormat byte
 
-func PrepareSetTime(dateTime time.Time) []byte {
+func prepareSetTime(dateTime time.Time) []byte {
 	return append([]byte{0x45, 0x20}, []byte(dateTime.Format("1504"))...)
 }
 
-func PrepareSetDate(dateTime time.Time) []byte {
+func prepareSetDate(dateTime time.Time) []byte {
 	return append([]byte{0x45, 0x3B}, []byte(dateTime.Format("010206"))...)
 }
 
@@ -35,4 +35,22 @@ func PrepareTime() []byte {
 
 func PrepareDateTime() []byte {
 	return append(PrepareDate(), append([]byte(" "), PrepareTime()...)...)
+}
+
+func SetDateTime(dateTime time.Time) []byte {
+	sequences := [][]byte{
+		InitSequence(),
+		prepareSetDate(dateTime),
+		DeinitSequence(),
+		InitSequence(),
+		prepareSetTime(dateTime),
+		DeinitSequence(),
+	}
+
+	var returnSequence []byte
+	for _, sequence := range sequences {
+		returnSequence = append(returnSequence, sequence...)
+	}
+
+	return returnSequence
 }

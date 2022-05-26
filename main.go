@@ -14,47 +14,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = s.Write(AlphaProtocol.InitSequence())
+	_, err = s.Write(AlphaProtocol.SetDateTime(time.Now()))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = s.Write(AlphaProtocol.PrepareSetTime(time.Now()))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.DeinitSequence())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.InitSequence())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.PrepareSetDate(time.Now()))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.DeinitSequence())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.InitSequence())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.PrepareStaticText(AlphaProtocol.PrepareDateTime(), AlphaProtocol.COLOR_COLOR_MIX))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write(AlphaProtocol.DeinitSequence())
+	_, err = s.Write(AlphaProtocol.SetStaticText(append([]byte("Hey, its: "), AlphaProtocol.PrepareDateTime()...), AlphaProtocol.COLOR_GREEN))
 	if err != nil {
 		log.Fatal(err)
 	}
