@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>alpha Protocol</title>
+</head>
+<body>
+    <div id="reset-ram-wrapper">
+        <button id="reset-ram-btn" onclick="resetRam()">Reset-RAM</button>
+    </div>
+
+    <p>&nbsp;</p>
+
+    <div id="set-time-wrapper">
+        <label for="date-input">
+            Date and time (2022-04-23T00:09)
+        </label><input id="date-input" type="datetime-local" /> <button id="date-btn" onclick="setDateTime()">set datetime</button>
+    </div>
+
+    <p>&nbsp;</p>
+
+    <div id="set-text-wrapper">
+        <label for="position-select">position</label>
+        <select id="position-select">
+            <option value="">---</option>
+            <option value="MIDDLE">MIDDLE</option>
+            <option value="CENTER">CENTER</option>
+            <option value="BOTTOM">BOTTOM</option>
+            <option value="FILL">FILL</option>
+            <option value="LEFT">LEFT</option>
+            <option value="RIGHT">RIGHT</option>
+        </select>
+
+        <label for="default-mode-select">default-mode</label>
+        <select id="default-mode-select">
+            <option value="">---</option>
+            <option value="ROTATE">ROTATE</option>
+            <option value="HOLD">HOLD</option>
+            <option value="FLASH">FLASH</option>
+            <option value="ROLL_UP">ROLL_UP</option>
+            <option value="ROLL_DOWN">ROLL_DOWN</option>
+            <option value="ROLL_LEFT">ROLL_LEFT</option>
+            <option value="ROLL_RIGHT">ROLL_RIGHT</option>
+            <option value="WIPE_UP">WIPE_UP</option>
+            <option value="WIPE_DOWN">WIPE_DOWN</option>
+            <option value="WIPE_LEFT">WIPE_LEFT</option>
+            <option value="WIPE_RIGHT">WIPE_RIGHT</option>
+            <option value="SCROLL">SCROLL</option>
+            <option value="AUTOMODE">AUTOMODE</option>
+            <option value="ROLL_IN">ROLL_IN</option>
+            <option value="ROLL_OUT">ROLL_OUT</option>
+            <option value="WIPE_IN">WIPE_IN</option>
+            <option value="WIPE_OUT">WIPE_OUT</option>
+            <option value="COMPRESSED_ROTATE">COMPRESSED_ROTATE</option>
+            <option value="EXPLODE">EXPLODE</option>
+            <option value="CLOCK">CLOCK</option>
+            <option value="SPECIAL">SPECIAL</option>
+        </select>
+
+        <label for="special-mode-select">special-mode</label>
+        <select id="special-mode-select">
+            <option value="">---</option>
+            <option value="TWINKLE">TWINKLE</option>
+            <option value="SPARKLE">SPARKLE</option>
+            <option value="SNOW">SNOW</option>
+            <option value="INTERLOCK">INTERLOCK</option>
+            <option value="SWITCH">SWITCH</option>
+            <option value="SLIDE">SLIDE</option>
+            <option value="SPRAY">SPRAY</option>
+            <option value="STARBUST">STARBUST</option>
+            <option value="WELCOME">WELCOME</option>
+            <option value="SLOT_MACHINE">SLOT_MACHINE</option>
+            <option value="CYCLE_COLOR">CYCLE_COLOR</option>
+        </select>
+
+        <label for="text">text</label>
+        <input type="text" id="text">
+
+        <button id="text-btn" onclick="setText()">write text</button>
+    </div>
+
+    <p>&nbsp;</p>
+
+    <div id="special-sign-wrapper">
+        <label for="position-select-special">position</label>
+        <select id="position-select-special">
+            <option value="MIDDLE">MIDDLE</option>
+            <option value="CENTER">CENTER</option>
+            <option value="BOTTOM">BOTTOM</option>
+            <option value="FILL">FILL</option>
+            <option value="LEFT">LEFT</option>
+            <option value="RIGHT">RIGHT</option>
+        </select>
+
+        <label for="special-sign-select">
+            special sign
+        </label>
+        <select id="special-sign-select">
+            <option value="THANK_YOU">THANK_YOU</option>
+            <option value="NO_SMOKE">NO_SMOKE</option>
+            <option value="DONT_DRINK_AND_DRIVE">DONT_DRINK_AND_DRIVE</option>
+            <option value="RUNNING_ANIMAIL">RUNNING_ANIMAIL</option>
+            <option value="FIREWORKS">FIREWORKS</option>
+            <option value="TURBO_CAR">TURBO_CAR</option>
+            <option value="CHERRY_BOMB">CHERRY_BOMB</option>
+        </select>
+
+        <button id="special-sign-btn" onclick="setSpecialSign()">set special sign</button>
+    </div>
+
+    <script type="text/javascript">
+        function resetRam() {
+            httpGetAsync('/api/v1/reset-ram', () => {});
+        }
+
+        function setSpecialSign() {
+            let data = {
+                "position": document.getElementById('position-select-special').value,
+                "special-sign": document.getElementById('special-sign-select').value
+            }
+
+            httpPostAsync('/api/v1/special-sign', data, () => {})
+        }
+
+        function setDateTime() {
+            let data = {
+                "date": document.getElementById('date-input').value
+            }
+
+            httpPostAsync('/api/v1/set-date', data, () => {})
+        }
+
+        function setText() {
+            let data = {
+                "message": document.getElementById('text').value,
+                "position": document.getElementById('position-select').value === "" ? null : document.getElementById('position-select').value,
+                "default-mode": document.getElementById('default-mode-select').value === "" ? null : document.getElementById('default-mode-select').value,
+                "special-mode": document.getElementById('special-mode-select').value === "" ? null : document.getElementById('special-mode-select').value,
+            }
+
+            httpPostAsync('/api/v1/write-text', data, () => {})
+        }
+
+        function httpGetAsync(theUrl, callback)
+        {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
+                    callback(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous
+            xmlHttp.send(null);
+        }
+
+        function httpPostAsync(theUrl, theData, callback)
+        {
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", theUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    let json = JSON.parse(xhr.responseText);
+                    callback(json);
+                }
+            };
+            let data = JSON.stringify(theData);
+            xhr.send(data);
+        }
+    </script>
+</body>
+</html>

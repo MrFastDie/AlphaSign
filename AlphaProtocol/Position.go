@@ -1,5 +1,10 @@
 package AlphaProtocol
 
+import (
+	"errors"
+	"strings"
+)
+
 type Position byte
 
 const (
@@ -10,3 +15,22 @@ const (
 	POSITION_LEFT   Position = 0x31
 	POSITION_RIGHT  Position = 0x32
 )
+
+func GetPositionByString(position string) (Position, error) {
+	switch strings.ToUpper(position) {
+	case "MIDDLE":
+		return POSITION_MIDDLE, nil
+	case "CENTER":
+		return POSITION_CENTER, nil
+	case "BOTTOM":
+		return POSITION_BOTTOM, nil
+	case "FILL":
+		return POSITION_FILL, nil
+	case "LEFT":
+		return POSITION_LEFT, nil
+	case "RIGHT":
+		return POSITION_RIGHT, nil
+	}
+
+	return 0, errors.New("unknown position")
+}
